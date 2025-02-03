@@ -4,7 +4,7 @@ import TaskInput from '../components/TaskInput';
 export default function Index() {
   return (
     <View style={styles.container}>
-      <StatusBar hidden={true} />
+      <StatusBar hidden={false} />
      <TaskInput />
     </View>
   );

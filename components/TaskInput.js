@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     padding: 20,
-    marginTop: 20,
+    marginTop: 60,
   },
   newTaskContainer: {
     flexDirection: "row",
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     padding: 15,
     borderRadius: 10,
-    marginVertical: 10,
+    marginVertical: 40,
     backgroundColor: "#E2EBFA",
   },
   item: {
