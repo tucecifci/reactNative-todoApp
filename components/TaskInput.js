@@ -1,4 +1,11 @@
-import { StyleSheet, TextInput, View, Text, Pressable } from "react-native";
+import {
+  StyleSheet,
+  TextInput,
+  View,
+  Text,
+  Pressable,
+  ScrollView,
+} from "react-native";
 import React, { useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 
@@ -13,6 +20,11 @@ const TaskInput = () => {
       setTask("");
       setShowInput(false);
     }
+  };
+
+  const handleDelete = (index) => {
+    const updatedTasks = taskList.filter((_, i) => i !== index);
+    setTaskList(updatedTasks);
   };
 
   return (
@@ -44,12 +56,20 @@ const TaskInput = () => {
           />
         </View>
       )}
-    
-      {taskList.map((item, index) => (
-        <View style={styles.taskListContainer} key={index}>
-          <Text style={styles.item}>{item}</Text>
-        </View>
-      ))}
+
+      <ScrollView style={styles.scrollView}>
+        {taskList.map((item, index) => (
+          <View style={styles.taskListContainer} key={index}>
+            <Text style={styles.item}>{item}</Text>
+            <MaterialIcons
+              name="delete"
+              size={24}
+              color="red"
+              onPress={() => handleDelete(index)}
+            />
+          </View>
+        ))}
+      </ScrollView>
     </View>
   );
 };
@@ -103,14 +123,14 @@ const styles = StyleSheet.create({
     width: "80%",
   },
   taskListContainer: {
-    paddingVertical:40,
+    paddingVertical: 40,
     borderRadius: 20,
     marginTop: 40,
-    backgroundColor: "#E2EBFA"
+    backgroundColor: "#E2EBFA",
   },
-  item:{
-    fontSize:18,
-    fontWeight:"400",
-    textAlign:"center"
-  }
+  item: {
+    fontSize: 18,
+    fontWeight: "400",
+    textAlign: "center",
+  },
 });
