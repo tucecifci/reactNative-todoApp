@@ -1,4 +1,4 @@
-import { StyleSheet, TextInput, View, Text, Pressable } from "react-native";
+import { StyleSheet, TextInput, View, Text, Pressable, ScrollView } from "react-native";
 import React, { useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 
@@ -7,16 +7,31 @@ const TaskInput = () => {
   const [taskList, setTaskList] = useState([]);
   const [showInput, setShowInput] = useState(false);
 
+  // Görev ekleme
   const handleAddTask = () => {
     if (task.trim()) {
-      setTaskList([...taskList, task]);
+      setTaskList([...taskList, { text: task, isCompleted: false }]);
       setTask("");
       setShowInput(false);
     }
   };
 
+  // Görev tamamlama
+  const handleToggleComplete = (index) => {
+    const updatedTasks = [...taskList];
+    updatedTasks[index].isCompleted = !updatedTasks[index].isCompleted;
+    setTaskList(updatedTasks);
+  };
+
+  // Görev silme
+  const handleDelete = (index) => {
+    const updatedTasks = taskList.filter((_, i) => i !== index);
+    setTaskList(updatedTasks);
+  };
+
   return (
     <View style={styles.container}>
+      {/* Üst Bar */}
       <View style={styles.newTaskContainer}>
         <Text style={styles.title}>Today's Task</Text>
         <Pressable
@@ -27,6 +42,7 @@ const TaskInput = () => {
         </Pressable>
       </View>
 
+      {/* Input Alanı */}
       {showInput && (
         <View style={styles.inputContainer}>
           <TextInput
@@ -38,18 +54,43 @@ const TaskInput = () => {
           <MaterialIcons
             name="add"
             size={24}
-            color="black"
+            color="white"
             onPress={handleAddTask}
             style={styles.addIcon}
           />
         </View>
       )}
-    
-      {taskList.map((item, index) => (
-        <View style={styles.taskListContainer} key={index}>
-          <Text style={styles.item}>{item}</Text>
-        </View>
-      ))}
+
+      {/* Görev Listesi */}
+      <ScrollView style={styles.scrollView}>
+        {taskList.map((item, index) => (
+          <View style={styles.taskListContainer} key={index}>
+            {/* Check İkonu */}
+            <MaterialIcons
+              name={item.isCompleted ? "check-circle" : "radio-button-unchecked"} // İkon durumu
+              size={24}
+              color={item.isCompleted ? "green" : "gray"}
+              onPress={() => handleToggleComplete(index)}
+            />
+            {/* Görev Metni */}
+            <Text
+              style={[
+                styles.item,
+                item.isCompleted && styles.completedTaskText, // Tamamlanmış görev stili
+              ]}
+            >
+              {item.text}
+            </Text>
+            {/* Silme İkonu */}
+            <MaterialIcons
+              name="delete"
+              size={24}
+              color="black"
+              onPress={() => handleDelete(index)}
+            />
+          </View>
+        ))}
+      </ScrollView>
     </View>
   );
 };
@@ -88,29 +129,40 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 30,
+    marginBottom: 20,
+    marginTop: 30,
   },
   addIcon: {
-    marginTop: 50,
-    marginLeft: 20,
+    marginLeft: 10,
     backgroundColor: "green",
-    borderRadius: "50%",
-    padding: 2,
+    borderRadius: 50,
+    padding: 4,
   },
   addTaskInput: {
     borderBottomWidth: 0.5,
-    marginTop: 40,
     width: "80%",
+    padding: 10,
+    fontSize: 16,
+  },
+  scrollView: {
+    flex: 1,
   },
   taskListContainer: {
-    paddingVertical:40,
-    borderRadius: 20,
-    marginTop: 40,
-    backgroundColor: "#E2EBFA"
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: 15,
+    borderRadius: 10,
+    marginVertical: 10,
+    backgroundColor: "#E2EBFA",
   },
-  item:{
-    fontSize:18,
-    fontWeight:"400",
-    textAlign:"center"
-  }
+  item: {
+    fontSize: 18,
+    fontWeight: "400",
+    flex: 1,
+    marginHorizontal: 10,
+  },
+  completedTaskText: {
+    textDecorationLine: "line-through",
+  },
 });
