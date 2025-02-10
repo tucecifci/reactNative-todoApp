@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     padding: 15,
     borderRadius: 10,
-    marginVertical: 40,
+    marginVertical: 20,
     backgroundColor: "#E2EBFA",
   },
   item: {
