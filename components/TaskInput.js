@@ -1,13 +1,21 @@
-import { StyleSheet, TextInput, View, Text, Pressable, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  TextInput,
+  View,
+  Text,
+  Pressable,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import React, { useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 
 const TaskInput = () => {
+  const router = useRouter();
   const [task, setTask] = useState("");
   const [taskList, setTaskList] = useState([]);
   const [showInput, setShowInput] = useState(false);
-
-  // Görev ekleme
   const handleAddTask = () => {
     if (task.trim()) {
       setTaskList([...taskList, { text: task, isCompleted: false }]);
@@ -15,15 +23,11 @@ const TaskInput = () => {
       setShowInput(false);
     }
   };
-
-  // Görev tamamlama
   const handleToggleComplete = (index) => {
     const updatedTasks = [...taskList];
     updatedTasks[index].isCompleted = !updatedTasks[index].isCompleted;
     setTaskList(updatedTasks);
   };
-
-  // Görev silme
   const handleDelete = (index) => {
     const updatedTasks = taskList.filter((_, i) => i !== index);
     setTaskList(updatedTasks);
@@ -31,7 +35,9 @@ const TaskInput = () => {
 
   return (
     <View style={styles.container}>
-      {/* Üst Bar */}
+      <TouchableOpacity onPress={() => router.push("/random")}>
+        <Text>Go to Random Page</Text>
+      </TouchableOpacity>
       <View style={styles.newTaskContainer}>
         <Text style={styles.title}>Today's Task</Text>
         <Pressable
@@ -41,8 +47,6 @@ const TaskInput = () => {
           <Text style={styles.btnText}>+ New Task</Text>
         </Pressable>
       </View>
-
-      {/* Input Alanı */}
       {showInput && (
         <View style={styles.inputContainer}>
           <TextInput
@@ -61,27 +65,25 @@ const TaskInput = () => {
         </View>
       )}
 
-      {/* Görev Listesi */}
       <ScrollView style={styles.scrollView}>
         {taskList.map((item, index) => (
           <View style={styles.taskListContainer} key={index}>
-            {/* Check İkonu */}
             <MaterialIcons
-              name={item.isCompleted ? "check-circle" : "radio-button-unchecked"} // İkon durumu
+              name={
+                item.isCompleted ? "check-circle" : "radio-button-unchecked"
+              }
               size={24}
               color={item.isCompleted ? "green" : "gray"}
               onPress={() => handleToggleComplete(index)}
             />
-            {/* Görev Metni */}
             <Text
               style={[
                 styles.item,
-                item.isCompleted && styles.completedTaskText, // Tamamlanmış görev stili
+                item.isCompleted && styles.completedTaskText,
               ]}
             >
               {item.text}
             </Text>
-            {/* Silme İkonu */}
             <MaterialIcons
               name="delete"
               size={24}
